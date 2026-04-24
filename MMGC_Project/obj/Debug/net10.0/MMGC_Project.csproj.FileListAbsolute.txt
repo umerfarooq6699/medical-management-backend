@@ -224,3 +224,5 @@ F:\medical-management-backend\MMGC_Project\bin\Debug\net10.0\ru\Microsoft.CodeAn
 F:\medical-management-backend\MMGC_Project\bin\Debug\net10.0\tr\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
 F:\medical-management-backend\MMGC_Project\bin\Debug\net10.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
 F:\medical-management-backend\MMGC_Project\bin\Debug\net10.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
+F:\medical-management-backend\MMGC_Project\obj\Debug\net10.0\MMGC_Project.sourcelink.json
+F:\medical-management-backend\MMGC_Project\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
