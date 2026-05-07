@@ -116,5 +116,20 @@ namespace MMGC_Project.Controllers
                 }
             });
         }
+        [HttpGet("all-users")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var users = await _userManager.Users
+                .Select(u => new
+                {
+                    u.Id,
+                    u.FullName,
+                    u.Email,
+                    u.UserName
+                })
+                .ToListAsync();
+
+            return Ok(users);
+        }
     }
 }
