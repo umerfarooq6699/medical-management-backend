@@ -64,7 +64,11 @@ builder.Services.AddCors(options =>
 
 // ─── 5. Controller Configuration ─────────────────────────────────────────────
 builder.Services.AddControllersWithViews();
-builder.Services.AddControllers(); // Enables API controllers
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+    }); // Enables API controllers with string Enum support
 
 var app = builder.Build();
 

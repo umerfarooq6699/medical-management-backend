@@ -13,5 +13,6 @@ namespace MMGC_Project.Data
 
         // ── Tables ──────────────────────────────────────────────────────────
         public DbSet<Patient> Patients { get; set; }
+        public DbSet<Appointment> Appointments { get; set; }
     }
 }
