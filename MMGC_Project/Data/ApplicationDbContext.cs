@@ -14,5 +14,15 @@ namespace MMGC_Project.Data
         // ── Tables ──────────────────────────────────────────────────────────
         public DbSet<Patient> Patients { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
+        public DbSet<Doctor> Doctors { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.Entity<Doctor>()
+                .Property(d => d.TotalRevenue)
+                .HasPrecision(18, 2);
+        }
     }
 }
