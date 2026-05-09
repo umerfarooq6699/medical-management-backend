@@ -19,6 +19,7 @@ namespace MMGC_Project.Controllers
 
         // ── POST /api/appointments ───────────────────────────────────────────────
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Create([FromBody] AppointmentDto dto)
         {
             var appointment = new Appointment
@@ -45,22 +46,6 @@ namespace MMGC_Project.Controllers
         // ── GET /api/appointments/all-appointments (Unprotected) ────────────────
         [HttpGet("all-appointments")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetAllUnprotected()
-        {
-            var appointments = await _context.Appointments
-                .OrderByDescending(a => a.AppointmentDateTime)
-                .ToListAsync();
-
-            return Ok(new
-            {
-                Status       = "Success",
-                Count        = appointments.Count,
-                Appointments = appointments
-            });
-        }
-
-        // ── GET /api/appointments ────────────────────────────────────────────────
-        [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             var appointments = await _context.Appointments
@@ -75,8 +60,10 @@ namespace MMGC_Project.Controllers
             });
         }
 
+
         // ── GET /api/appointments/{id} ───────────────────────────────────────────
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetById(int id)
         {
             var appointment = await _context.Appointments.FindAsync(id);
@@ -89,6 +76,7 @@ namespace MMGC_Project.Controllers
 
         // ── PUT /api/appointments/{id} ────────────────────────────────────────────
         [HttpPut("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> Update(int id, [FromBody] AppointmentDto dto)
         {
             var appointment = await _context.Appointments.FindAsync(id);
@@ -114,6 +102,7 @@ namespace MMGC_Project.Controllers
 
         // ── DELETE /api/appointments/{id} ─────────────────────────────────────────
         [HttpDelete("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> Delete(int id)
         {
             var appointment = await _context.Appointments.FindAsync(id);

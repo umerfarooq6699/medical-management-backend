@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MMGC_Project.Data;
@@ -18,6 +19,7 @@ namespace MMGC_Project.Controllers
 
         // ── POST /api/patients ───────────────────────────────────────────────
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Create([FromBody] PatientDto dto)
         {
             var patient = new Patient
@@ -42,7 +44,8 @@ namespace MMGC_Project.Controllers
         }
 
         // ── GET /api/patients ────────────────────────────────────────────────
-        [HttpGet]
+        [HttpGet("all-patients")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAll()
         {
             var patients = await _context.Patients
@@ -59,6 +62,7 @@ namespace MMGC_Project.Controllers
 
         // ── GET /api/patients/{id} ───────────────────────────────────────────
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetById(int id)
         {
             var patient = await _context.Patients.FindAsync(id);
@@ -71,6 +75,7 @@ namespace MMGC_Project.Controllers
 
         // ── PUT /api/patients/{id} ────────────────────────────────────────────
         [HttpPut("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> Update(int id, [FromBody] PatientDto dto)
         {
             var patient = await _context.Patients.FindAsync(id);
@@ -97,6 +102,7 @@ namespace MMGC_Project.Controllers
 
         // ── DELETE /api/patients/{id} ─────────────────────────────────────────
         [HttpDelete("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> Delete(int id)
         {
             var patient = await _context.Patients.FindAsync(id);
