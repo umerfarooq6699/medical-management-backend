@@ -9,5 +9,7 @@ namespace MMGC_Project.Models
         public string NurseName { get; set; } = string.Empty;
         public DateTime AppointmentDateTime { get; set; }
         public AppointmentStatus Status { get; set; } = AppointmentStatus.Booked;
+        public string PhoneNumber { get; set; } = string.Empty;
+        public string Symptoms { get; set; } = string.Empty;
     }
 }

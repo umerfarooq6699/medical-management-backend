@@ -29,6 +29,8 @@ namespace MMGC_Project.Controllers
                 NurseName           = dto.NurseName,
                 AppointmentDateTime = dto.AppointmentDateTime,
                 Status              = dto.Status,
+                PhoneNumber         = dto.PhoneNumber,
+                Symptoms            = dto.Symptoms,
                 CreatedAt           = DateTime.UtcNow
             };
 
@@ -89,6 +91,8 @@ namespace MMGC_Project.Controllers
             appointment.NurseName           = dto.NurseName;
             appointment.AppointmentDateTime = dto.AppointmentDateTime;
             appointment.Status              = dto.Status;
+            appointment.PhoneNumber         = dto.PhoneNumber;
+            appointment.Symptoms            = dto.Symptoms;
 
             await _context.SaveChangesAsync();
 
