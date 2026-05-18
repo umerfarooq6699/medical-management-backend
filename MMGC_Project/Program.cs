@@ -23,7 +23,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     options.Password.RequireLowercase = false;
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireUppercase = false;
-    options.Password.RequiredLength = 4; // Allow short passwords
+    options.Password.RequiredLength = 8; // Enforce minimum 8 characters
     options.Password.RequiredUniqueChars = 0;
 })
     .AddEntityFrameworkStores<ApplicationDbContext>()

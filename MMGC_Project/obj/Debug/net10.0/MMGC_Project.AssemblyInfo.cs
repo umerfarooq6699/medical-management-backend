@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MMGC_Project")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+519d0340a3f81fb2b6d5f5d210d3d1dc762a23d1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a52d997b27b075f18aca2678650b57d2de23243a")]
 [assembly: System.Reflection.AssemblyProductAttribute("MMGC_Project")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MMGC_Project")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

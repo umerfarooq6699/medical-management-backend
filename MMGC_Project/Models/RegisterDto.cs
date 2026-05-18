@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace MMGC_Project.Models
 {
@@ -12,7 +12,7 @@ namespace MMGC_Project.Models
         public string EmailAddress { get; set; } = string.Empty;
 
         [Required]
-        [MinLength(6)]
+        [MinLength(8)]
         public string Password { get; set; } = string.Empty;
 
         [Required]

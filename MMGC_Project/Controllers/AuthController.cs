@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -138,6 +139,35 @@ namespace MMGC_Project.Controllers
                 .ToListAsync();
 
             return Ok(users);
+        }
+
+        [HttpPost("change-password")]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto model)
+        {
+            try
+            {
+                var userName = User.Identity?.Name;
+                if (string.IsNullOrEmpty(userName))
+                    return Unauthorized(new { Status = "Error", Message = "User is not authenticated." });
+
+                var user = await _userManager.FindByNameAsync(userName);
+                if (user == null)
+                    return NotFound(new { Status = "Error", Message = "User not found." });
+
+                var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+                if (!result.Succeeded)
+                {
+                    var errors = result.Errors.Select(e => e.Description);
+                    return BadRequest(new { Status = "Error", Message = "Password change failed.", Errors = errors });
+                }
+
+                return Ok(new { Status = "Success", Message = "Password changed successfully." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Status = "Error", Message = ex.Message, Detailed = ex.ToString() });
+            }
         }
     }
 }
