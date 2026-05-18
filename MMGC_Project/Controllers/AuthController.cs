@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -32,17 +32,20 @@ namespace MMGC_Project.Controllers
         public async Task<IActionResult> Register([FromBody] RegisterDto model)
         {
             // 1. Check if user already exists
-            var userExists = await _userManager.FindByEmailAsync(model.Email);
+            var userExists = await _userManager.FindByEmailAsync(model.EmailAddress);
             if (userExists != null)
                 return BadRequest(new { Status = "Error", Message = "User already exists!" });
 
             // 2. Create the user object
             ApplicationUser user = new()
             {
-                Email = model.Email,
+                Email = model.EmailAddress,
                 SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = model.Email,
-                FullName = model.Name
+                UserName = model.EmailAddress,
+                FullName = model.FullName,
+                Contact = model.ContactNumber,
+                Gender = model.Gender,
+                PhoneNumber = model.ContactNumber
             };
 
             // 3. Save user to database
@@ -61,7 +64,7 @@ namespace MMGC_Project.Controllers
             return Ok(new { Status = "Success", Message = "User created successfully!" });
         }
 
-        // ── POST /api/auth/login ──────────────────────────────────────────────
+        // POST /api/auth/login
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto model)
         {
@@ -112,10 +115,13 @@ namespace MMGC_Project.Controllers
                     user.Id,
                     user.FullName,
                     user.Email,
+                    user.Contact,
+                    user.Gender,
                     Roles = userRoles
                 }
             });
         }
+
         [HttpGet("all-users")]
         public async Task<IActionResult> GetAllUsers()
         {
@@ -125,6 +131,8 @@ namespace MMGC_Project.Controllers
                     u.Id,
                     u.FullName,
                     u.Email,
+                    u.Contact,
+                    u.Gender,
                     u.UserName
                 })
                 .ToListAsync();

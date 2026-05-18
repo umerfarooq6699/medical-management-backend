@@ -19,7 +19,7 @@ namespace MMGC_Project.Controllers
 
         // ── POST /api/appointments ───────────────────────────────────────────────
         [HttpPost]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<IActionResult> Create([FromBody] AppointmentDto dto)
         {
             var appointment = new Appointment
