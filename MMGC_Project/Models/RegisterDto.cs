@@ -15,8 +15,7 @@ namespace MMGC_Project.Models
         [MinLength(8)]
         public string Password { get; set; } = string.Empty;
 
-        [Required]
-        public string Role { get; set; } = string.Empty; // Admin, Doctor, Patient, etc.
+        public string Role { get; set; } = "Patient";
 
         [Required]
         public string ContactNumber { get; set; } = string.Empty;

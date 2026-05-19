@@ -46,7 +46,8 @@ namespace MMGC_Project.Controllers
                 FullName = model.FullName,
                 Contact = model.ContactNumber,
                 Gender = model.Gender,
-                PhoneNumber = model.ContactNumber
+                PhoneNumber = model.ContactNumber,
+                Role = "patient"
             };
 
             // 3. Save user to database
@@ -55,12 +56,14 @@ namespace MMGC_Project.Controllers
                 return BadRequest(new { Status = "Error", Message = "User creation failed!", Errors = result.Errors });
 
             // 4. Handle Role assignment
-            if (!await _roleManager.RoleExistsAsync(model.Role))
+            string assignedRole = "Patient";
+
+            if (!await _roleManager.RoleExistsAsync(assignedRole))
             {
-                await _roleManager.CreateAsync(new IdentityRole(model.Role));
+                await _roleManager.CreateAsync(new IdentityRole(assignedRole));
             }
 
-            await _userManager.AddToRoleAsync(user, model.Role);
+            await _userManager.AddToRoleAsync(user, assignedRole);
 
             return Ok(new { Status = "Success", Message = "User created successfully!" });
         }
@@ -81,18 +84,14 @@ namespace MMGC_Project.Controllers
                 return Unauthorized(new { Status = "Error", Message = "Invalid name or password." });
 
             // 3. Build claims (info embedded in the token)
-            var userRoles = await _userManager.GetRolesAsync(user);
-
             var authClaims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name,  user.UserName!),
                 new Claim(ClaimTypes.Email, user.Email!),
                 new Claim("FullName",       user.FullName),
+                new Claim(ClaimTypes.Role,  user.Role), // Read directly from the Users table column
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
-
-            foreach (var role in userRoles)
-                authClaims.Add(new Claim(ClaimTypes.Role, role));
 
             // 4. Generate JWT token
             var authSigningKey = new SymmetricSecurityKey(
@@ -118,7 +117,7 @@ namespace MMGC_Project.Controllers
                     user.Email,
                     user.Contact,
                     user.Gender,
-                    Roles = userRoles
+                    Roles = new[] { user.Role } // Use the direct Role column from the database!
                 }
             });
         }
@@ -134,7 +133,8 @@ namespace MMGC_Project.Controllers
                     u.Email,
                     u.Contact,
                     u.Gender,
-                    u.UserName
+                    u.UserName,
+                    Role = u.Role
                 })
                 .ToListAsync();
 

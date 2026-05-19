@@ -95,5 +95,4 @@ app.MapControllerRoute(
     .WithStaticAssets();
 
 app.MapControllers(); // Link API routes
-
 app.Run();
