@@ -169,5 +169,94 @@ namespace MMGC_Project.Controllers
                 return StatusCode(500, new { Status = "Error", Message = ex.Message, Detailed = ex.ToString() });
             }
         }
+
+        [HttpPut("update-profile")]
+        [Authorize]
+        public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileDto model)
+        {
+            try
+            {
+                var userName = User.Identity?.Name;
+                if (string.IsNullOrEmpty(userName))
+                    return Unauthorized(new { Status = "Error", Message = "User is not authenticated." });
+
+                var user = await _userManager.FindByNameAsync(userName);
+                if (user == null)
+                    return NotFound(new { Status = "Error", Message = "User not found." });
+
+                // Check email uniqueness if it is changing
+                if (!string.Equals(user.Email, model.Email, StringComparison.OrdinalIgnoreCase))
+                {
+                    var emailExists = await _userManager.FindByEmailAsync(model.Email);
+                    if (emailExists != null)
+                        return BadRequest(new { Status = "Error", Message = "Email address is already in use." });
+                }
+
+                // Check full name uniqueness if it is changing
+                if (!string.Equals(user.FullName, model.Name, StringComparison.OrdinalIgnoreCase))
+                {
+                    var nameExists = await _userManager.Users.AnyAsync(u => u.FullName == model.Name && u.Id != user.Id);
+                    if (nameExists)
+                        return BadRequest(new { Status = "Error", Message = "Full Name is already in use." });
+                }
+
+                // Update properties
+                user.FullName = model.Name;
+                user.Email = model.Email;
+                user.UserName = model.Email;
+                user.Contact = model.Contact;
+                user.PhoneNumber = model.Contact;
+                user.Gender = model.Gender;
+
+                var result = await _userManager.UpdateAsync(user);
+                if (!result.Succeeded)
+                {
+                    var errors = result.Errors.Select(e => e.Description);
+                    return BadRequest(new { Status = "Error", Message = "Profile update failed.", Errors = errors });
+                }
+
+                // Re-generate JWT claims with updated info
+                var authClaims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name,  user.UserName!),
+                    new Claim(ClaimTypes.Email, user.Email!),
+                    new Claim("FullName",       user.FullName),
+                    new Claim(ClaimTypes.Role,  user.Role),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                };
+
+                var authSigningKey = new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]!));
+
+                var token = new JwtSecurityToken(
+                    issuer:             _configuration["JWT:ValidIssuer"],
+                    audience:           _configuration["JWT:ValidAudience"],
+                    expires:            DateTime.UtcNow.AddHours(8),
+                    claims:             authClaims,
+                    signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+                );
+
+                return Ok(new
+                {
+                    Status      = "Success",
+                    Message     = "Profile updated successfully.",
+                    Token       = new JwtSecurityTokenHandler().WriteToken(token),
+                    Expiration  = token.ValidTo,
+                    User = new
+                    {
+                        user.Id,
+                        user.FullName,
+                        user.Email,
+                        user.Contact,
+                        user.Gender,
+                        Roles = new[] { user.Role }
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Status = "Error", Message = ex.Message, Detailed = ex.ToString() });
+            }
+        }
     }
 }

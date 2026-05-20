@@ -31,6 +31,7 @@ namespace MMGC_Project.Controllers
                 Status              = dto.Status,
                 PhoneNumber         = dto.PhoneNumber,
                 Symptoms            = dto.Symptoms,
+                TimeSlot            = dto.TimeSlot,
                 CreatedAt           = DateTime.UtcNow
             };
 
@@ -93,6 +94,7 @@ namespace MMGC_Project.Controllers
             appointment.Status              = dto.Status;
             appointment.PhoneNumber         = dto.PhoneNumber;
             appointment.Symptoms            = dto.Symptoms;
+            appointment.TimeSlot            = dto.TimeSlot;
 
             await _context.SaveChangesAsync();
 

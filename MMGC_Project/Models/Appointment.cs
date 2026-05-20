@@ -12,6 +12,7 @@ namespace MMGC_Project.Models
         public AppointmentStatus Status { get; set; } = AppointmentStatus.Booked; // Default status
         public string PhoneNumber { get; set; } = string.Empty;
         public string Symptoms { get; set; } = string.Empty;
+        public string TimeSlot { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }
