@@ -63,6 +63,25 @@ namespace MMGC_Project.Controllers
             });
         }
 
+        // ── GET /api/appointments/doctor/{doctorName} ───────────────────────────
+        [HttpGet("doctor/{doctorName}")]
+        [Authorize]
+        public async Task<IActionResult> GetByDoctorName(string doctorName)
+        {
+            // The frontend passes normalized names without 'Dr. ' prefix, so we use string contains/tolower
+            var appointments = await _context.Appointments
+                .Where(a => a.DoctorName != null && a.DoctorName.ToLower().Contains(doctorName.ToLower()))
+                .OrderByDescending(a => a.AppointmentDateTime)
+                .ToListAsync();
+
+            return Ok(new
+            {
+                Status       = "Success",
+                Count        = appointments.Count,
+                Appointments = appointments
+            });
+        }
+
 
         // ── GET /api/appointments/{id} ───────────────────────────────────────────
         [HttpGet("{id}")]
